@@ -22,6 +22,11 @@ pipeline {
                             ls -la  
                             '''
                 }
+                 post {
+                    always {
+                         junit 'test-results/junit.xml'
+        }
+    }
              }
         stage('E2E') {
             agent {
@@ -36,15 +41,31 @@ pipeline {
                     node --version
                     '''
                 }
+                 post {
+                    always {
+                        junit 'test-results/junit.xml'
+        }
+    }
              }
 
             }
         }
+        stage('Deploy') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                }
+            }
+                    steps {
+                
+                        sh '''
+                            npm install -g netlify-cli
+                            netlify --version
+                            '''
+                }
+             }
         
     }
-    post {
-        always {
-            junit 'test-results/junit.xml'
-        }
-    }
+   
 }
