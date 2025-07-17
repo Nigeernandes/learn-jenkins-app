@@ -7,6 +7,11 @@ pipeline {
     }
 
     stages {
+        stage ('docker') {
+            steps {
+                sh 'docker build -t my-playright .'
+            }
+        }
         stage ('Run tests') {
             parallel {
                 stage('Build') {
